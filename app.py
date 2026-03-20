@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-# ✅ Load trained model safely
+# Load trained model
 model_path = os.path.join(os.path.dirname(__file__), "model.pkl")
 with open(model_path, "rb") as f:
     model = pickle.load(f)
