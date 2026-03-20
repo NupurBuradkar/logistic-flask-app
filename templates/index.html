@@ -10,9 +10,9 @@
 
 <div class="card">
 
-    <input type="number" id="hours" placeholder="Study Hours" min="0">
-    <input type="number" id="attendance" placeholder="Attendance %" min="0">
-    <input type="number" id="marks" placeholder="Marks" min="0">
+    <input type="number" id="hours" placeholder="Study Hours">
+    <input type="number" id="attendance" placeholder="Attendance %">
+    <input type="number" id="marks" placeholder="Marks">
 
     <button onclick="predict()">Predict</button>
 
@@ -29,11 +29,6 @@ function predict() {
     let hours = document.getElementById("hours").value;
     let attendance = document.getElementById("attendance").value;
     let marks = document.getElementById("marks").value;
-
-    if (!hours || !attendance || !marks) {
-        alert("Fill all fields!");
-        return;
-    }
 
     fetch("/predict", {
         method: "POST",
