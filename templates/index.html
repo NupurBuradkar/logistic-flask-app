@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>🎓 Student Pass Predictor</h1>
+
+<div class="card">
+
+    <input type="number" id="hours" placeholder="Study Hours" min="0">
+    <input type="number" id="attendance" placeholder="Attendance %" min="0">
+    <input type="number" id="marks" placeholder="Marks" min="0">
+
+    <button onclick="predict()">Predict</button>
+
+    <h2 id="result"></h2>
+    <p id="prob"></p>
+
+</div>
+
+<h3>📜 History</h3>
+<ul id="history"></ul>
+
+<script>
+function predict() {
+    let hours = document.getElementById("hours").value;
+    let attendance = document.getElementById("attendance").value;
+    let marks = document.getElementById("marks").value;
+
+    if (!hours || !attendance || !marks) {
+        alert("Fill all fields!");
+        return;
+    }
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ hours, attendance, marks })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        document.getElementById("result").innerText =
+            data.prediction === 1 ? "PASS ✅" : "FAIL ❌";
+
+        document.getElementById("prob").innerText =
+            "Probability: " + data.probability;
+
+        loadHistory();
+    });
+}
+
+function loadHistory() {
+    fetch("/history")
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("history");
+        list.innerHTML = "";
+
+        data.slice(-5).forEach(item => {
+            let li = document.createElement("li");
+            li.innerText =
+                `Prediction: ${item.prediction}, Prob: ${item.probability}`;
+            list.appendChild(li);
+        });
+    });
+}
+</script>
+
+</body>
+</html>
